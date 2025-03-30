@@ -15,37 +15,39 @@ import AxiosInstance from "@/helper/AxiosInstance";
 import { Link, router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StylesLogin } from "../components/StylesApp/StyleApp";
+import { useDispatch, useSelector } from "react-redux";
+import loginUser from "../components/redux-help/slices/AuthSlice";
 
 const Index = () => {
+  const { user, token, isLoading, isSuccess, isError, errorMessage } =
+    useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [emailUser, setEmailUser] = useState("");
   const [passwordUser, setPasswordUser] = useState("");
 
   const handleLogin = async () => {
-    try {
-      const body = { email: emailUser, password: passwordUser };
-      const response = await AxiosInstance().post("/users/login", body);
-      console.log(response);
+    // try {
+    //   const body = { email: emailUser, password: passwordUser };
+    //   const response = await AxiosInstance().post("/users/login", body);
+    //   if (response.status === true || response.status === "true") {
+    //     const token = response.token;
+    //     // Giải mã token để lấy userId
+    //     const payload = JSON.parse(atob(token.split(".")[1])); // Giải mã JWT payload
+    //     const user = payload.id;
+    //     await AsyncStorage.setItem("token", token); // Lưu token
+    //     await AsyncStorage.setItem("userId", user); // Lưu ID người dùng
+    //     Alert.alert("Thông báo", "Đăng nhập thành công");
+    //     router.push("/(tabs)/Home");
+    //   } else {
+    //     Alert.alert("Thông báo", response.message || "Đăng nhập thất bại");
+    //   }
+    // } catch (error) {
+    //   console.error("Lỗi đăng nhập:", error.response?.data || error.message);
+    //   Alert.alert("Thông báo", "Đăng nhập không thành công. Vui lòng thử lại!");
+    // }
 
-      if (response.status === true || response.status === "true") {
-        const token = response.token;
-
-        // Giải mã token để lấy userId
-        const payload = JSON.parse(atob(token.split(".")[1])); // Giải mã JWT payload
-        const user = payload.id;
-
-        await AsyncStorage.setItem("token", token); // Lưu token
-        await AsyncStorage.setItem("userId", user); // Lưu ID người dùng
-
-        Alert.alert("Thông báo", "Đăng nhập thành công");
-        router.push("/(tabs)/Home");
-      } else {
-        Alert.alert("Thông báo", response.message || "Đăng nhập thất bại");
-      }
-    } catch (error) {
-      console.error("Lỗi đăng nhập:", error.response?.data || error.message);
-      Alert.alert("Thông báo", "Đăng nhập không thành công. Vui lòng thử lại!");
-    }
+    dispatch.loginUser({ emailUser, passwordUser });
   };
 
   return (

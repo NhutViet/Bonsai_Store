@@ -68,7 +68,7 @@ router.post("/login", async (req, res) => {
       status: "true",
       message: "Đăng nhập thành công!",
       token,
-      data: user,
+      user: user,
     });
   } catch (error) {
     res.status(500).json({ message: "Lỗi server!" });

@@ -11,17 +11,21 @@ import {
   REGISTER,
 } from "redux-persist";
 import cartSlice from "../slices/cart";
+import AuthReducer from "../slices/AuthSlice";
 
-const persistConfig = {
-  key: "root", // Thay đổi key cho hợp lý hơn
+const CartConfig = {
+  key: "cart",
+  storage: AsyncStorage,
+};
+
+const persistAuthConfig = {
+  key: "auth",
   storage: AsyncStorage,
 };
 
 const rootReducer = combineReducers({
-  cart: cartSlice, // Đặt tên là "cart" thay vì "counter"
+  auth: persistReducer(persistAuthConfig, AuthReducer),
 });
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,
